@@ -9,13 +9,15 @@ const userSchema = new Schema({
                            type: String
                        },
                        'email': {
-                           type: String
+                           type: String,
+                           required: true
                        },
                        'phone': {
                            type: Number
                        },
                        'password':{
-                           type: String
+                           type: String,
+                           required: true
                        },
                        'status': {
                            type: Boolean

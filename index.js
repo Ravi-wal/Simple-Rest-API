@@ -14,7 +14,7 @@ const dbConfig = require('./config/database.config');
 mongoose.Promise = global.Promise;
 
 
-mongoose.connect(dbConfig.url , { useNewUrlParser : true, useUnifiedTopology : true})
+mongoose.connect(dbConfig.url , { useNewUrlParser : true, useUnifiedTopology : true, useFindAndModify: false})
         .then(() => {
             console.log('Database Connected Successfully');
         })
