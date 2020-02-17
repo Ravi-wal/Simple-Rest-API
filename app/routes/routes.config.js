@@ -1,4 +1,4 @@
-const isAuthorized = require('../../config/jwt.config');
+const jwt = require('../../config/jwt.config');
 
 module.exports = app => {
   const users = require("../controllers/users.controller");
@@ -6,7 +6,7 @@ module.exports = app => {
 
   app.post("/auth", auth.login);
 
-  app.get("/users", isAuthorized , users.list);
+  app.get("/users", jwt.isAuthorized , users.list);
   app.post("/users", users.create);
   app.get("/users/:userId", users.findone);
   app.put("/users/:userId", users.update);

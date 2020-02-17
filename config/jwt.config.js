@@ -1,5 +1,6 @@
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const algorithm = 'HS512';
 
 const isAuthorized = (req,res,next) => {
     
@@ -9,7 +10,7 @@ const isAuthorized = (req,res,next) => {
         let token = req.headers.authorization.split(' ')[1];
         let privateKey = fs.readFileSync('./private.pem','utf8');
 
-        jwt.verify(token, privateKey, { algorithm: "HS256" }, (err, user) => {
+        jwt.verify(token, privateKey, { algorithm: algorithm }, (err, user) => {
             if (err) {  
                 return res.status(500).json({ error: "Invalid Key" });
             }
@@ -22,4 +23,20 @@ const isAuthorized = (req,res,next) => {
 }
 
 
-module.exports = isAuthorized;
+const generateToken =  () => {
+    try{
+       let privateKey = fs.readFileSync('./private.pem','utf8');
+       let jToken = jwt.sign({"body": "stuff"},privateKey,{algorithm: algorithm,expiresIn: '1m'});
+       return jToken;
+    } catch(err){
+       console.log('Error Occured at generateToken ' + err);
+       res.status(500).json({ error: "Not Authorized" });
+    }
+   
+ }
+ 
+
+module.exports = {
+    isAuthorized,
+    generateToken
+}

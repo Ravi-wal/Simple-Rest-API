@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
 
 
 const app = express();
@@ -34,13 +32,6 @@ require("./app/routes/routes.config")(app);
 app.get("/", (req, res) => {
   res.json({ message: "success" });
 });
-
-
-app.get("/jwt", (req, res) => {
-    let privateKey = fs.readFileSync('./private.pem','utf8');
-    let jToken = jwt.sign({"body": "stuff"},privateKey,{algorithm: 'HS256'});
-    res.send(jToken);
-  });
 
 
 
