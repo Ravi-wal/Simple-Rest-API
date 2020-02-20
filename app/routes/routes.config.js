@@ -8,7 +8,7 @@ module.exports = app => {
   app.get("/auth/logout", auth.logout);
   app.get("/auth/tokens", auth.listTokens);
 
-  app.get("/users", jwt.isAuthorized , users.list);
+  app.get("/users", auth.tokenStatus, jwt.isAuthorized , users.list);
   app.post("/users", users.create);
   app.get("/users/:userId", users.findone);
   app.put("/users/:userId", users.update);

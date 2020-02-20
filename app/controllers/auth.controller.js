@@ -17,19 +17,18 @@ const login = async (req, res) => {
         token: token,
         active: true
       });
-      tokenData.save().then( data => {
-        console.log(data)
-      })
-      .catch(err => {
-        console.log('Error while inserting the tokens');
-      });
-
-      res.status(200).json({
-        success: true,
-        message: "Successfully Logged in",
-        email: email,
-        token: token
-      });
+      try{
+        tokenData.save();
+        res.status(200).json({
+          success: true,
+          message: "Successfully Logged in",
+          email: email,
+          token: token
+        });
+      } catch(err){
+        console.log('Token Insert:' + err);
+      }
+      
     } else {
       res.status(401).json({
         success: false,
@@ -54,18 +53,9 @@ const logout = async (req,res) => {
     if(headers !== undefined) {
         let token = req.headers.authorization.split(' ')[1];
         var query = {token: token};
-        console.log(query);
         
-   let  tr  = await Token.findOneAndUpdate(query,{$set:{active: false}})
-   console.log(tr)
-              // .then( data => {
-              //   console.log(data);
-              //   return res.status(200).json({message: 'Successfully logout'});
-              // })
-              // .catch(err => {
-              //   console.log(err);
-              //   return res.status(500).json({message : 'Something went wrong'});
-              // });
+        let  tr  = await Token.findOneAndUpdate(query,{$set:{active: false}})
+        res.status(200).json({message: 'Successfully logged out'});
     } else {
         res.status(500).json({ error: "Not Authorized" });
        
@@ -73,6 +63,24 @@ const logout = async (req,res) => {
   }catch(err){
 console.log(err)
   }
+}
+
+const tokenStatus = async (req,res,next) => {
+  let headers = req.headers.authorization;
+
+  if(headers !== undefined) {
+      var query = {token: req.headers.authorization.split(' ')[1]};
+      var data = await Token.findOne(query);
+      if(data.active == true){
+        return next();
+      } else {
+        res.status(500).json({ error: "Not Authorized" });
+      }
+      
+  } else {
+    res.status(500).json({ error: "Not Authorized" });
+    throw new Error("Not Authorized");
+}
 }
 
 const listTokens = (req, res) => {
@@ -87,5 +95,6 @@ const listTokens = (req, res) => {
 module.exports = {
   login,
   logout,
-  listTokens
+  listTokens,
+  tokenStatus
 };

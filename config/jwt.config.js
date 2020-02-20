@@ -26,7 +26,7 @@ const isAuthorized = (req,res,next) => {
 const generateToken =  () => {
     try{
        let privateKey = fs.readFileSync('./private.pem','utf8');
-       let jToken = jwt.sign({"body": "stuff"},privateKey,{algorithm: algorithm,expiresIn: '1m'});
+       let jToken = jwt.sign({"body": "stuff"},privateKey,{algorithm: algorithm,expiresIn: '24h'});
        return jToken;
     } catch(err){
        console.log('Error Occured at generateToken ' + err);
