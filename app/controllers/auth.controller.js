@@ -12,12 +12,11 @@ const login = async (req, res) => {
   try {
     let loginRes = await checkUser(email, password);
     if(!!loginRes) {
-      let token = await jwt.generateToken();
-      const tokenData = new Token({
-        token: token,
-        active: true
-      });
-      try{
+        let token = await jwt.generateToken();
+        const tokenData = new Token({
+          token: token,
+          active: true
+        });
         tokenData.save();
         res.status(200).json({
           success: true,
@@ -25,10 +24,6 @@ const login = async (req, res) => {
           email: email,
           token: token
         });
-      } catch(err){
-        console.log('Token Insert:' + err);
-      }
-      
     } else {
       res.status(401).json({
         success: false,
