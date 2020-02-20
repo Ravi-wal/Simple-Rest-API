@@ -1,6 +1,6 @@
 const User = require("../models/users.model");
 
-const create = (req, res) => {
+const create = async (req, res) => {
   if (!req.body.firstname) {
     return res.status(400).json({ message: "Firstname required" });
   }
@@ -11,31 +11,23 @@ const create = (req, res) => {
     return res.status(400).json({ message: "Password required" });
   }
 
-  User.findOne({ email: req.body.email })
-    .then(async data => {
-      if (data) {
-        return res.status(400).json({
-          message: "Already registered with the email " + req.body.email
-        });
-      } else {
-            try {
-            const userdetails = await createUser(req.body);
-            console.log(userdetails, "userdetails");
-            res.status(200).send({ message: "user created succesfully" });
-            } catch (err) {
-            throw err;
-            }
-      }
-    })
-    .catch(err => {
-      return res.status(500).json({ message: "Something went wrong" });
-    });
+  try{
+    if(await User.findOne({ email: req.body.email })){
+      return res.status(400).json({
+        message: "Already registered with the email " + req.body.email
+      });
+    } else {
+      await createUser(req.body);
+      res.status(200).send({ message: "user created succesfully" });
+    }
+  } catch(err){
+    return res.status(500).json({ message: "Something went wrong" });
+  }
 };
 
 
 function createUser(details) {
   const user = new User(details);
-
   user.save().catch(err => {
     throw err;
   });
