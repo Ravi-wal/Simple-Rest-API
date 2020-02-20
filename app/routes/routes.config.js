@@ -5,6 +5,8 @@ module.exports = app => {
   const auth = require("../controllers/auth.controller");
 
   app.post("/auth", auth.login);
+  app.get("/auth/logout", auth.logout);
+  app.get("/auth/tokens", auth.listTokens);
 
   app.get("/users", jwt.isAuthorized , users.list);
   app.post("/users", users.create);
