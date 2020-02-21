@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const port = 3001;
 
 const app = express();
 
@@ -35,6 +35,6 @@ app.get("/", (req, res) => {
 
 
 
-app.listen(3000, () => {
-  console.log("Running at port 3000");
+app.listen(port, () => {
+  console.log("Running at port " + port);
 });
