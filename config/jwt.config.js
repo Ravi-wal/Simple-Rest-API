@@ -14,6 +14,8 @@ const isAuthorized = (req,res,next) => {
             if (err) {  
                 return res.status(500).json({ error: "Invalid Key" });
             }
+            
+            req.body.userId = user.userId;
             return next();
         });
     } else {
@@ -23,10 +25,10 @@ const isAuthorized = (req,res,next) => {
 }
 
 
-const generateToken =  () => {
+const generateToken =  (userId) => {
     try{
        let privateKey = fs.readFileSync('./private.pem','utf8');
-       let jToken = jwt.sign({"body": "stuff"},privateKey,{algorithm: algorithm,expiresIn: '24h'});
+       let jToken = jwt.sign({"body": "stuff",'userId':userId},privateKey,{algorithm: algorithm,expiresIn: '24h'});
        return jToken;
     } catch(err){
        console.log('Error Occured at generateToken ' + err);

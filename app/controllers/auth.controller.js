@@ -11,13 +11,14 @@ const login = async (req, res) => {
   
   try {
     let loginRes = await checkUser(email, password);
+    
     if(!!loginRes) {
-        let token = await jwt.generateToken();
-        const tokenData = new Token({
-          token: token,
-          active: true
-        });
-        tokenData.save();
+        let token = await jwt.generateToken(loginRes._id);
+        // const tokenData = new Token({
+        //   token: token,
+        //   active: true
+        // });
+        // tokenData.save();
         res.status(200).json({
           success: true,
           message: "Successfully Logged in",
