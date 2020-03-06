@@ -35,7 +35,7 @@ function createPost(details) {
 
 
 const list = (req, res) => {
-  Post.find()
+  Post.find().sort({createdAt: 'desc'})
     .then(data => {
       return res.status(200).json(data);
     })
